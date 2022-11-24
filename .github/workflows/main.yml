@@ -1,21 +1,15 @@
-name: CI
-
-on: [push, pull_request]
-
+name: reviewdog
+on: [pull_request]
 jobs:
-  build:
-
+  brakeman:
+    name: runner / brakeman
     runs-on: ubuntu-latest
-
     steps:
-      - name: Install sqlite
-        run: sudo apt-get install libsqlite3-dev
-      - uses: actions/checkout@v1
-      - name: Set up Ruby 2.5
-        uses: actions/setup-ruby@v1
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.5.x
-      - name: Run build
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-        run: bash ./generate-github.sh
+          ruby-version: 3.0.3
+      - name: brakeman
+        uses: reviewdog/action-brakeman@v2
